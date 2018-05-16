@@ -11,6 +11,10 @@ class Asteroid {
     // define velocity using random direction
     velocity = new PVector(cos(radians(random(360))), sin(radians(random(360))));
   }
+  
+  /* int getSize(){
+    return astSize;
+  }*/
 
   void update() {
     // normalize velocity to standardize speed
