@@ -19,11 +19,19 @@ PShape thrusterShape, thrusterMain, thrusterBack, thrusterLeft, thrusterRight;
 PShape[] astShapes = new PShape[3];  // array of different asteroid size PShapes
 
 Ship myShip;
+
+
+// Score myScore;
+int currentScore = 0;
+String score = "Score";
+int round = 1;
+String level = "Level";
+
+
 float speed = 0;
 float maxSpeed = 4;
 float shipSize = 1.0; // define the scale of the ship (and thruster) shape
 float radians = radians(270); //if your ship is facing up (like in atari game)
-
 
 ArrayList<Asteroid> asteroids = new ArrayList<Asteroid>();
 int numAsteroids = 4; // initial number of asteroids
@@ -33,7 +41,7 @@ int killAsteroidsCounter = 0; // counter I'm using to kill the asteroids periodi
 ArrayList<Shot> shots = new ArrayList<Shot>();
 
 boolean sUP = false, sDOWN = false, sRIGHT = false, sLEFT = false;
-int score = 0;
+// int score = 0;
 boolean alive = true;
 void setup() {
   size(1200, 800);
@@ -146,6 +154,24 @@ void drawShots() {
 }
 
 /**
+  Function: drawScore()
+  Parameters: Function to display the current player's score
+  Returns: Player score
+  Desc: Creates a scoreboard for the current player's score and displays it on the game area.
+*/
+void drawScore() {
+  textSize(32);
+  fill(#fefefe);
+  text(score + " " + currentScore, 125, 125);
+}
+void drawLevel() {
+  textSize(24);
+  fill(#fefefe);
+  text(level + " " + round, 125, 154); 
+}
+
+
+/**
   Function: drawAstroids()
   Parameters: None
   Returns: Void
@@ -153,16 +179,6 @@ void drawShots() {
         current location. Also verifies location in relation to display limits.
 */
 void drawAstroids() {
-  // TEST TEST TEST TEST TEST TEST TEST TEST TEST
-  // resize asteroids in array at certain times
-  // TEST TEST TEST TEST TEST TEST TEST TEST TEST
-  killAsteroidsCounter++;
-  if ((killAsteroidsCounter % 200) == 0) {
-    for (Asteroid a : asteroids) {
-      a.hit();
-    }
-  }
-
   // create a new temporary ArrayList to store asteroids that are still alive
   ArrayList<Asteroid> asteroidsAlive = new ArrayList<Asteroid>();
 
@@ -180,9 +196,11 @@ void drawAstroids() {
   // update asteroids ArrayList to only those asteroids that are still alive
   asteroids = asteroidsAlive;
 
-  // check if asteroids ArrayList is empty and create a new (larger) one if so
+  // check if asteroids ArrayList is empty and create a new (larger) one if so,
+  // and increment the player level (round)
   if (asteroids.size() == 0) {
     numAsteroids += 2;
+    round++;
     asteroids = new ArrayList<Asteroid>();
     for (int i = 0; i < numAsteroids; i++) {
       asteroids.add(new Asteroid());
@@ -197,47 +215,22 @@ void drawAstroids() {
   Desc: Checks if shots have hit an astroid(s) or if the ship has collided
         with any astroids.
 */
+void collisionDetection() {
+  for(Asteroid a : asteroids) {
+    // create a new temporary ArrayList to store shots that are still alive
+    ArrayList<Shot> shotsAlive = new ArrayList<Shot>();
 
-
- void collisionDetection(){
-   for(Asteroid a : asteroids)
-     for(Shot s : shots)
-       if (dist(a.location.x, a.location.y, s.location.x, s.location.y)<=50)
-          {
-            a.hasExploded = true;
-            s.hasExploded = true;
- }
- 
- }
- 
- 
-void applyResults(){
-     
-int index = 0;
-  
-  while (index < asteroids.size() )
-  {
-    if (asteroids.get(index).hasExploded)
-    
-      asteroids.remove(asteroids.get(index));
- else
- index++;
-  
+    for(Shot s : shots) {
+      if (dist(a.location.x, a.location.y, s.location.x, s.location.y)<=35) {
+        a.hit();
+      } else {
+        shotsAlive.add(s);
+      }
+    }
+    // update shots ArrayList to only those shots that are still alive
+    shots = shotsAlive;
   }
-
-  while (index < shots.size() )
-  {
-    if (shots.get(index).hasExploded)
-    
-      shots.remove(shots.get(index));
- else
- index++;
-  
-  }
-  
-}//end function
-  
- 
+} 
 
 void draw() {
   background(0);
@@ -245,12 +238,12 @@ void draw() {
   //might be worth checking to see if you are still alive first
   moveShip();
   collisionDetection();
-  applyResults();
   drawShots();
   // draw ship - call shap(..) if Pshape
   // report if game over or won
   drawAstroids();
-  // draw score
+  drawScore();
+  drawLevel();
 }
 
 /**
