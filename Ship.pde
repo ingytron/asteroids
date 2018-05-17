@@ -1,6 +1,4 @@
 class Ship {
-  int astSize = 25; // defines default asteroid size
-  
 PVector velocity;
 PVector location;
 
@@ -42,4 +40,9 @@ PVector location;
       location.y =height;
     }
   }
-}
+  
+  void emergencyStop()
+    {
+      velocity = new PVector(0,0);
+    }
+}//end of class

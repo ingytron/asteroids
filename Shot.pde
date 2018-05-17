@@ -9,7 +9,7 @@ class Shot {
     location = myShip.location.copy();
 
     // define velocity using random direction
-    velocity = new PVector(cos(radians), sin(radians));
+    velocity = new PVector(cos(radiansDir), sin(radiansDir));
     
     // defines how long (in frames) the shot will survive
     shotTimer = 100;

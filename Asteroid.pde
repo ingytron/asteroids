@@ -3,6 +3,7 @@ class Asteroid {
   PVector velocity;
   int astSize = 2; // defines default asteroid size
   boolean hasExploded = false;
+  float standardRadius = 35;
 
   Asteroid() {
     // randomly assign location
@@ -25,13 +26,18 @@ class Asteroid {
   }
 
   void hit() {
-    astSize--;
-    // When the player destroys an asteroid, increment their score
-    if (astSize == 0){
-      currentScore++;
-      // When the asteroid is destroyed, it should create an explosion TODO
-      hasExploded = true; 
+    int points;
+    // big asteroids worth 20, medium worth 50, small worth 100
+    if (astSize == 2) {
+      points = 20;
+    } else if (astSize == 1) {
+      points = 50;
+    } else {
+      points = 100;
     }
+    currentScore += points;
+    astSize--;
+   
   }
 
   void display() {
